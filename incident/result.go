@@ -1,8 +1,9 @@
 package incident
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"time"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type Incident struct {
@@ -80,6 +81,11 @@ type Paging struct {
 	Prev  string `json:"prev"`
 	First string `json:"first"`
 	Last  string `json:"last"`
+}
+
+type GetResponderAlertsResult struct {
+	client.ResultMetadata
+	AlertIds []string `json:"data"`
 }
 
 // This is an undocumented part of the response, but is very important for us as it's the only way we

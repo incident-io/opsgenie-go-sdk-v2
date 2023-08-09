@@ -27,9 +27,7 @@ type OpsGenieClient struct {
 	Config          *Config
 }
 
-type request struct {
-	*retryablehttp.Request
-}
+type request = retryablehttp.Request
 
 type ApiRequest interface {
 	Validate() error
@@ -273,7 +271,7 @@ func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, nu
 }
 
 func (cli *OpsGenieClient) do(request *request) (*http.Response, error) {
-	return cli.RetryableClient.Do(request.Request)
+	return cli.RetryableClient.Do(request)
 }
 
 func setResultMetadata(httpResponse *http.Response, result ApiResult) *ResultMetadata {
@@ -367,7 +365,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 	req.Header.Add("Authorization", "GenieKey "+cli.Config.ApiKey)
 	req.Header.Add("User-Agent", UserAgentHeader)
 
-	return &request{req}, err
+	return req, err
 
 }
 
@@ -462,7 +460,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 	if ctx != nil {
-		req.WithContext(ctx)
+		req = req.WithContext(ctx)
 	}
 
 	response, err := cli.do(req)
